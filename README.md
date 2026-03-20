@@ -1,141 +1,85 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Send, Bot, User, Settings, Shield, Sparkles } from 'lucide-react';
-
-const PremiumAISolver = () => {
-  const [input, setInput] = useState("");
-  const [isListening, setIsListening] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [messages, setMessages] = useState([]);
-  
-  const recognitionRef = useRef(null);
-
-  // Initialize Voice Recognition
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        setInput(text);
-        handleStartInteraction();
-      };
-    }
-  }, []);
-
-  const handleStartInteraction = () => {
-    if (!hasStarted) setHasStarted(true);
-  };
-
-  const onInputChange = (e) => {
-    setInput(e.target.value);
-    if (e.target.value.length > 0) handleStartInteraction();
-  };
-
-  const triggerVoice = () => {
-    setIsListening(true);
-    recognitionRef.current.start();
-    handleStartInteraction();
-  };
-
-  return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#D1D1D1] font-sans selection:bg-blue-500/30 flex flex-col">
-      
-      {/* 1. TOP NAVIGATION */}
-      <nav className="flex justify-between items-center px-8 py-6 backdrop-blur-md bg-[#0A0A0A]/80 sticky top-0 z-50 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-            <Shield className="text-white" size={20} />
-          </div>
-          <span className="text-xl font-bold tracking-tighter text-white">CORE_AI</span>
+l<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core AI - Matte Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0A0A0A; color: #D1D1D1; overflow: hidden; }
+        .matte-card { background-color: #121212; border: 1px solid rgba(255,255,255,0.05); }
+        .fade-out { opacity: 0; transition: opacity 0.5s ease-in-out; pointer-events: none; }
+        /* Voice Pulse Animation */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .listening { animation: pulse-red 1.5s infinite; color: #ef4444 !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans">
+    <nav class="flex justify-between items-center px-8 py-6 border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-blue-900/40">A</div>
+            <span class="text-xl font-bold tracking-tighter">CORE_AI</span>
         </div>
-        <div className="flex gap-6 items-center text-gray-500">
-          <Settings size={20} className="hover:text-white cursor-pointer transition-colors" />
-          <div className="w-8 h-8 rounded-full bg-[#1A1A1A] border border-white/10 flex items-center justify-center">
-            <User size={16} />
-          </div>
+        <div class="text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </div>
-      </nav>
-
-      {/* 2. MAIN CONTENT AREA */}
-      <main className="flex-1 flex flex-col relative max-w-5xl w-full mx-auto px-6">
-        
-        {/* "HELLO WORLD" CENTERPIECE (Fades out when typing starts) */}
-        {!hasStarted && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-in-out pointer-events-none">
-            <h1 className="text-7xl font-black tracking-tighter text-white/10 animate-pulse">
-              HELLO WORLD
-            </h1>
-            <p className="text-gray-600 mt-4 tracking-[0.4em] text-[10px] uppercase">
-              System Ready • Voice & Text Enabled
-            </p>
-          </div>
-        )}
-
-        {/* CHAT MESSAGES (Visible after interaction) */}
-        <div className={`flex-1 py-10 space-y-8 transition-opacity duration-500 ${hasStarted ? 'opacity-100' : 'opacity-0'}`}>
-          {messages.map((m, i) => (
-            <div key={i} className={`flex gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
-              {m.role === 'ai' && <Bot size={20} className="text-blue-500 mt-2" />}
-              <div className={`p-5 rounded-3xl max-w-[70%] ${
-                m.role === 'user' 
-                ? 'bg-blue-600 text-white rounded-br-none shadow-xl' 
-                : 'bg-[#151515] border border-white/5 rounded-bl-none text-gray-200'
-              }`}>
-                {m.content}
-              </div>
+    </nav>
+    <main class="flex-1 relative flex items-center justify-center">
+        <div id="center-piece" class="text-center transition-all duration-700">
+            <h1 class="text-7xl md:text-9xl font-black text-white/5 tracking-tighter">HELLO WORLD</h1>
+            <p class="text-gray-700 mt-4 tracking-[0.5em] text-xs uppercase font-bold">Waiting for input...</p>
+        </div
+        <div id="chat-container" class="absolute inset-0 p-8 overflow-y-auto hidden">
             </div>
-          ))}
-        </div>
-      </main>
-
-      {/* 3. THE MATTE BLACK INPUT SYSTEM */}
-      <div className="p-8 pb-12 w-full max-w-4xl mx-auto">
-        <div className="relative group">
-          {/* Main Input Container */}
-          <div className="bg-[#121212] border border-white/10 rounded-[30px] p-3 flex items-center shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all focus-within:border-blue-500/50">
-            
-            {/* Mic Option */}
-            <button 
-              onClick={triggerVoice}
-              className={`p-4 rounded-2xl transition-all ${isListening ? 'bg-red-500/10 text-red-500 animate-pulse' : 'hover:bg-white/5 text-gray-500'}`}
-            >
-              <Mic size={24} />
+    </main>
+    <footer class="p-8 pb-12 w-full max-w-4xl mx-auto">
+        <div class="matte-card rounded-[30px] p-2 flex items-center shadow-2xl">
+            <button id="mic-btn" class="p-4 text-gray-500 hover:text-white transition-all rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+            </button
+            <input type="text" id="user-input" placeholder="Describe your problem..." 
+                class="flex-1 bg-transparent border-none outline-none px-4 py-2 text-lg text-white placeholder-gray-700">
+            <button id="send-btn" class="bg-white text-black p-4 rounded-2xl hover:bg-blue-600 hover:text-white transition-all transform active:scale-95 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             </button>
-
-            {/* Input Field */}
-            <input 
-              type="text"
-              value={input}
-              onChange={onInputChange}
-              placeholder="Ask anything..."
-              className="flex-1 bg-transparent border-none outline-none px-4 text-lg text-white placeholder-gray-700"
-            />
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 pr-2">
-              <button className="p-4 text-gray-600 hover:text-white transition-colors">
-                <Sparkles size={22} />
-              </button>
-              <button 
-                className="bg-white text-black p-4 rounded-2xl hover:bg-blue-500 hover:text-white transition-all transform active:scale-90 shadow-lg"
-                onClick={() => {
-                  setMessages([...messages, {role: 'user', content: input}]);
-                  setInput("");
-                }}
-              >
-                <Send size={22} />
-              </button>
-            </div>
-          </div>
-          
-          {/* Subtle Branding Bottom */}
-          <p className="text-center mt-4 text-[9px] uppercase tracking-[0.3em] text-gray-700 font-bold">
-            Powered by Core_AI Engine v1.0
-          </p>
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default PremiumAISolver;
+        <p class="text-center mt-4 text-[10px] uppercase tracking-widest text-gray-800 font-bold">Matte Finish Interface v1.0</p>
+    </footer>
+    <script>
+        const input = document.getElementById('user-input');
+        const centerPiece = document.getElementById('center-piece');
+        const micBtn = document.getElementById('mic-btn');
+        // Function to hide HELLO WORLD when user starts typing
+        input.addEventListener('input', () => {
+            if(input.value.length > 0) {
+                centerPiece.classList.add('fade-out');
+            } else {
+                centerPiece.classList.remove('fade-out');
+            }
+        });
+        // Voice Recognition (JavaScript)
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();      
+            micBtn.onclick = () => {
+                recognition.start();
+                micBtn.classList.add('listening');
+            };
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                centerPiece.classList.add('fade-out');
+                micBtn.classList.remove('listening');
+            };
+            recognition.onerror = () => micBtn.classList.remove('listening');
+            recognition.onend = () => micBtn.classList.remove('listening');
+        } else {
+            micBtn.style.display = 'none'; // Hide if browser doesn't support voice
+        }
+    </script>
+</body>
+</html>
